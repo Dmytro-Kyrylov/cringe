@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://ec2-79-125-86-58.eu-west-1.compute.amazonaws.com:5432/d9f712nvhgq8sq
+    username: nyursjpalxdiwl
+    password: f793c1262d98860130ab81ac5ebe8daf11ddcd854979a65858150f9bfe5811e1

@@ -1,0 +1,9 @@
+logging:
+  level:
+    org.jooq.tools: DEBUG
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/cringe
+    username: postgres
+    password: root
