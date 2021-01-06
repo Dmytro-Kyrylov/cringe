@@ -38,7 +38,7 @@ public class DevInfoServiceImpl implements DevInfoService {
     } catch (Exception e) {
       throw ExternalException.builder()
           .type(ExceptionType.UNKNOWN)
-          .message(e.getMessage())
+          .message(e.toString())
           .arg("stacktrace", Arrays.toString(e.getStackTrace()))
           .build();
     }
@@ -48,9 +48,9 @@ public class DevInfoServiceImpl implements DevInfoService {
 
   private String getDatabaseSize() {
     String jdbcUrl = ((HikariDataSource) dataSource).getJdbcUrl();
-    return dsl.fetchSingle(
+    return dsl.fetchOptional(
         "select pg_size_pretty(pg_database_size('" + jdbcUrl.substring(jdbcUrl.lastIndexOf("/") + 1) + "'))"
-    ).map(x -> x.get(0)).toString();
+    ).map(x -> x.get(0)).map(Object::toString).orElse("0");
   }
 
   private String getRecordsCount() {
