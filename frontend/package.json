@@ -2,7 +2,6 @@
   "name": "cringe",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://api-cringe.herokuapp.com:443",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
