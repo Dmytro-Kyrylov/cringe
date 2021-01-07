@@ -5,7 +5,6 @@ target/
 !src/test/**/target/
 
 ### Frontend ###
-frontend/node_modules
 node_modules
 package-lock.json
 .eslintcache
