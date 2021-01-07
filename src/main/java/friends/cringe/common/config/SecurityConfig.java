@@ -22,14 +22,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    http
-        .authorizeRequests().anyRequest().authenticated()
-        .and().httpBasic();
+//    http
+//        .authorizeRequests().anyRequest().authenticated()
+//        .and().httpBasic();
   }
 
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+   // auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
   }
 
   @Bean
