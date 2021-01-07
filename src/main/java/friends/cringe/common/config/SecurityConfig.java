@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 
 @EnableWebSecurity
 @Configuration
@@ -22,9 +21,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Setter(onMethod_ = {@Autowired, @Qualifier("userDetailsServiceImpl")})
   private UserDetailsService userDetailsService;
 
-  @Setter(onMethod_ = @Autowired)
-  private BasicAuthenticationEntryPoint authenticationEntryPoint;
-
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http
@@ -32,7 +28,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers(HttpMethod.OPTIONS).permitAll()
         .anyRequest().authenticated()
         .and().httpBasic();
-        //.authenticationEntryPoint(authenticationEntryPoint);
   }
 
   @Override
