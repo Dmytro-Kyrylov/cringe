@@ -1,11 +1,10 @@
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+!src/main/**/target/
+!src/test/**/target/
 
 ### Frontend ###
-frontend/node_modules
 node_modules
 package-lock.json
 .eslintcache
@@ -32,8 +31,8 @@ package-lock.json
 /nbdist/
 /.nb-gradle/
 build/
-!**/src/main/**/build/
-!**/src/test/**/build/
+!src/main/**/build/
+!src/test/**/build/
 
 ### VS Code ###
 .vscode/

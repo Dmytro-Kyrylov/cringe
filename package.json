@@ -18,10 +18,10 @@
     "redux-thunk": "^2.3.0"
   },
   "scripts": {
-    "start": "cd frontend && react-scripts start",
-    "build": "cd frontend && react-scripts build",
-    "test": "cd frontend && react-scripts test",
-    "eject": "cd frontend && react-scripts eject"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
