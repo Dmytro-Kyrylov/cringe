@@ -16,7 +16,7 @@ export function getList() {
             Password:"kirill"
         }
         try {
-            const serverResponse = fetch(`https://f-cringe.herokuapp.com:443/api/list`, {
+            const serverResponse = fetch(`https://api-cringe.herokuapp.com:443/api/list`, {
                 method: 'GET',
                 headers: {
                     'content-type': 'application/json',
