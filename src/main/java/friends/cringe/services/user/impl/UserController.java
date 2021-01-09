@@ -24,7 +24,7 @@ public class UserController {
   @Setter(onMethod_ = @Autowired)
   private SecurityService securityService;
 
-  @Operation(summary = "Get user by id")
+  @Operation(summary = "Get current user")
   @GetMapping(UserUrl.GET)
   public UserDto get(Authentication authentication) {
     return userService.get(securityService.getByAuthentication(authentication).getId());
