@@ -19,8 +19,8 @@ public class ListController {
 
   @Operation(summary = "Get list by name")
   @GetMapping(ListUrl.GET)
-  public ListDto get(@PathVariable String name) {
-    return listService.get(name);
+  public ListDto get(@PathVariable Long qualifier) {
+    return listService.get(qualifier);
   }
 
   @Operation(summary = "Get all lists")
@@ -37,14 +37,14 @@ public class ListController {
 
   @Operation(summary = "Update list")
   @PatchMapping(ListUrl.UPDATE)
-  public ListDto update(@PathVariable String name, @Valid @RequestBody ListDto listDto) {
-    return listService.update(name, listDto);
+  public ListDto update(@PathVariable Long qualifier, @Valid @RequestBody ListDto listDto) {
+    return listService.update(qualifier, listDto);
   }
 
   @Operation(summary = "Delete list")
   @DeleteMapping(ListUrl.DELETE)
-  public void update(@PathVariable String name) {
-    listService.delete(name);
+  public void update(@PathVariable Long qualifier) {
+    listService.delete(qualifier);
   }
 
 }

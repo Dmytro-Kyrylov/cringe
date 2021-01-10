@@ -24,35 +24,35 @@ create table list
     updated_by  uuid      not null
         constraint list_user_update_fk references "user",
     updated_at  timestamp not null default current_timestamp,
-    name        text      not null unique,
+    qualifier   bigint    not null,
     title       text      not null,
     description text,
     deleted     boolean   not null default false
 );
 
+create sequence list_qualifier_seq;
+
 create table list_record
 (
-    id         uuid
+    id             uuid
         constraint list_record_pk primary key,
-    created_by uuid      not null
+    created_by     uuid      not null
         constraint list_record_user_create_fk references "user",
-    created_at timestamp not null default current_timestamp,
-    updated_by uuid      not null
+    created_at     timestamp not null default current_timestamp,
+    updated_by     uuid      not null
         constraint list_record_user_update_fk references "user",
-    updated_at timestamp not null default current_timestamp,
-    list_id    uuid      not null
-        constraint list_record_list_fk references list,
-    body       text      not null,
-    deleted    boolean   not null default false
+    updated_at     timestamp not null default current_timestamp,
+    list_qualifier bigint    not null,
+    body           text      not null,
+    deleted        boolean   not null default false
 );
 
 create table list_record_reaction
 (
-    id             uuid
-        constraint list_record_reaction_pk primary key,
     user_id        uuid   not null
         constraint list_record_reaction_user_fk references "user",
     list_record_id uuid   not null
         constraint list_record_reaction_list_record_fk references list_record,
-    rating         bigint not null default 0
+    rating         bigint not null default 0,
+    constraint list_record_reaction_pk primary key (user_id, list_record_id)
 );

@@ -19,42 +19,42 @@ public class ListRecordController {
   @Setter(onMethod_ = @Autowired)
   private ListRecordService listRecordService;
 
-  @Operation(summary = "Get list record by id and list name")
+  @Operation(summary = "Get list record by id and list qualifier")
   @GetMapping(ListRecordUrl.GET)
-  public ListRecordDto get(@PathVariable String name, @PathVariable UUID id) {
-    return listRecordService.get(name, id);
+  public ListRecordDto get(@PathVariable Long qualifier, @PathVariable UUID id) {
+    return listRecordService.get(qualifier, id);
   }
 
-  @Operation(summary = "Get all list records list name")
+  @Operation(summary = "Get all list records list qualifier")
   @GetMapping(ListRecordUrl.GET_ALL)
-  public List<ListRecordDto> getAll(@PathVariable String name) {
-    return listRecordService.getAll(name);
+  public List<ListRecordDto> getAll(@PathVariable Long qualifier) {
+    return listRecordService.getAll(qualifier);
   }
 
   @Operation(summary = "Create new list record")
   @PostMapping(ListRecordUrl.CREATE)
-  public ListRecordDto create(@PathVariable String name, @Valid @RequestBody ListRecordDto listRecordDto) {
-    return listRecordService.create(name, listRecordDto);
+  public ListRecordDto create(@PathVariable Long qualifier, @Valid @RequestBody ListRecordDto listRecordDto) {
+    return listRecordService.create(qualifier, listRecordDto);
   }
 
   @Operation(summary = "Update list record")
   @PatchMapping(ListRecordUrl.UPDATE)
-  public ListRecordDto update(@PathVariable String name, @PathVariable UUID id,
+  public ListRecordDto update(@PathVariable Long qualifier, @PathVariable UUID id,
                               @Valid @RequestBody ListRecordDto listRecordDto) {
-    return listRecordService.update(name, id, listRecordDto);
+    return listRecordService.update(qualifier, id, listRecordDto);
   }
 
   @Operation(summary = "Update user reaction for list record", description = "Change rating")
   @PatchMapping(ListRecordUrl.UPDATE_REACTION)
-  public ListRecordDto updateReaction(@PathVariable String name, @PathVariable UUID id,
+  public ListRecordDto updateReaction(@PathVariable Long qualifier, @PathVariable UUID id,
                               @Valid @RequestBody ListRecordReactionDto dto) {
-    return listRecordService.updateRating(name, id, dto);
+    return listRecordService.updateRating(qualifier, id, dto);
   }
 
-  @Operation(summary = "Delete list record by id and list name")
+  @Operation(summary = "Delete list record by id and list qualifier")
   @DeleteMapping(ListRecordUrl.DELETE)
-  public void delete(@PathVariable String name, @PathVariable UUID id) {
-    listRecordService.delete(name, id);
+  public void delete(@PathVariable Long qualifier, @PathVariable UUID id) {
+    listRecordService.delete(qualifier, id);
   }
 
 }

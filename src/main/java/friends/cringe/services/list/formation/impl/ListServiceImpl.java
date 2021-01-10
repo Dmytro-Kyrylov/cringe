@@ -8,6 +8,7 @@ import friends.cringe.services.list.formation.api.ListDto;
 import friends.cringe.services.list.formation.api.ListService;
 import lombok.Setter;
 import org.jooq.DSLContext;
+import org.jooq.codegen.Sequences;
 import org.jooq.codegen.tables.records.ListRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -17,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.jooq.codegen.tables.List.LIST;
@@ -33,13 +33,13 @@ public class ListServiceImpl implements ListService {
 
   @Cacheable(CacheConfig.LIST_FORMATION_CACHE)
   @Override
-  public ListDto get(String name) {
-    return dsl.selectFrom(LIST).where(LIST.NAME.eq(name).and(LIST.DELETED.isFalse()))
+  public ListDto get(Long qualifier) {
+    return dsl.selectFrom(LIST).where(LIST.QUALIFIER.eq(qualifier).and(LIST.DELETED.isFalse()))
         .fetchOptionalInto(ListDto.class)
         .orElseThrow(() ->
             ExternalException.builder()
                 .type(ExceptionType.LIST_NOT_FOUND)
-                .arg("name", name)
+                .arg("qualifier", qualifier.toString())
                 .build()
         );
   }
@@ -52,64 +52,48 @@ public class ListServiceImpl implements ListService {
         .fetchInto(ListDto.class);
   }
 
-  @Transactional
   @Override
   public ListDto create(ListDto dto) {
-    if (dsl.fetchExists(LIST, LIST.NAME.eq(dto.getName()).and(LIST.DELETED.isFalse()))) {
-      throw ExternalException.builder()
-          .type(ExceptionType.LIST_ALREADY_EXISTS)
-          .arg("name", dto.getName())
-          .build();
-    }
+    ListRecord listRecord = dsl.newRecord(LIST);
 
-    ListRecord listRecord;
+    Long newQualifier = dsl.nextval(Sequences.LIST_QUALIFIER_SEQ);
 
-    Optional<ListRecord> listRecordOptional =
-        dsl.fetchOptional(LIST, LIST.NAME.eq(dto.getName()).and(LIST.DELETED.isTrue()));
-    if (listRecordOptional.isPresent()) {
-      listRecord = listRecordOptional.get();
-    } else {
-      listRecord = dsl.newRecord(LIST);
-
-      listRecord.setId(UUID.randomUUID());
-      listRecord.setName(dto.getName());
-      listRecord.setCreatedBy(securityService.getCurrentUserId());
-    }
+    listRecord.setId(UUID.randomUUID());
+    listRecord.setQualifier(newQualifier);
+    listRecord.setCreatedBy(securityService.getCurrentUserId());
 
     initUpdateFields(dto, securityService.getCurrentUserId(), listRecord);
 
-    listRecord.store();
+    listRecord.insert();
 
-    return get(dto.getName());
+    return get(newQualifier);
   }
 
-  @CacheEvict(key = "#name", value = CacheConfig.LIST_FORMATION_CACHE)
+  @CacheEvict(key = "#qualifier", value = CacheConfig.LIST_FORMATION_CACHE)
   @Transactional
   @Override
-  public ListDto update(String name, ListDto dto) {
-    if (!dsl.fetchExists(LIST, LIST.NAME.eq(name).and(LIST.DELETED.isFalse()))) {
+  public ListDto update(Long qualifier, ListDto dto) {
+    if (!dsl.fetchExists(LIST, LIST.QUALIFIER.eq(qualifier).and(LIST.DELETED.isFalse()))) {
       throw ExternalException.builder()
           .type(ExceptionType.LIST_NOT_FOUND)
-          .arg("name", name)
+          .arg("qualifier", qualifier.toString())
           .build();
     }
 
-    ListRecord listRecord = dsl.fetchSingle(LIST, LIST.NAME.eq(name));
+    ListRecord listRecord = dsl.fetchSingle(LIST, LIST.QUALIFIER.eq(qualifier));
 
     initUpdateFields(dto, securityService.getCurrentUserId(), listRecord);
 
     listRecord.update();
 
-    listRecord.update();
-
-    return get(name);
+    return get(qualifier);
   }
 
-  @CacheEvict(key = "#name", value = CacheConfig.LIST_FORMATION_CACHE)
+  @CacheEvict(key = "#qualifier", value = CacheConfig.LIST_FORMATION_CACHE)
   @Transactional
   @Override
-  public void delete(String name) {
-    dsl.update(LIST).set(LIST.DELETED, true).where(LIST.NAME.eq(name)).execute();
+  public void delete(Long qualifier) {
+    dsl.update(LIST).set(LIST.DELETED, true).where(LIST.QUALIFIER.eq(qualifier)).execute();
   }
 
   private void initUpdateFields(ListDto dto, UUID userId, ListRecord listRecord) {
