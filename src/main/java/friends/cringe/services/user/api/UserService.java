@@ -5,6 +5,8 @@ import java.util.UUID;
 
 public interface UserService {
 
+  UserDto getCurrent();
+
   UserDto get(UUID id);
 
   UserDto get(String username);

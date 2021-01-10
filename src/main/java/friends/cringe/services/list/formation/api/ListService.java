@@ -1,9 +1,6 @@
 package friends.cringe.services.list.formation.api;
 
-import friends.cringe.services.user.api.UserDto;
-
 import java.util.List;
-import java.util.UUID;
 
 public interface ListService {
 
@@ -11,9 +8,9 @@ public interface ListService {
 
   List<ListDto> getAll();
 
-  ListDto create(ListDto dto, UserDto userDto);
+  ListDto create(ListDto dto);
 
-  ListDto update(String name, ListDto dto, UserDto userDto);
+  ListDto update(String name, ListDto dto);
 
   void delete(String name);
 
