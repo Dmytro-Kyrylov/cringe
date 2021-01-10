@@ -1,3 +1,9 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
 spring:
   datasource:
     url: jdbc:postgresql://ec2-79-125-86-58.eu-west-1.compute.amazonaws.com:5432/d9f712nvhgq8sq

@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://www.cringe.friends/soap"
+           targetNamespace="http://www.cringe.friends/soap"
+           elementFormDefault="qualified">
+
+    <!--    ||||||||||||||||||||||||||||||||||||||||LIST|||||||||||||||||||||||||||||||||||||||| -->
+
+    <xs:element name="getListRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="tns:uniqueNameQualifier"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="singleListResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="list" type="tns:listSoap"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getAllListsRequest"/>
+
+    <xs:element name="getAllListsResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="list" type="tns:listSoap" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="createListRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="list" type="tns:listSoap"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="updateListRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="tns:uniqueNameQualifier"/>
+                <xs:element name="list" type="tns:listSoap"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="deleteListRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="tns:uniqueNameQualifier"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="listSoap">
+        <xs:sequence>
+            <xs:element name="name" type="tns:uniqueNameQualifier"/>
+            <xs:element name="description" type="xs:string" minOccurs="0"/>
+            <xs:element name="title" type="tns:listTitle"/>
+
+            <xs:element name="id" type="tns:GUID" minOccurs="0"/>
+            <xs:element name="createdAt" type="xs:dateTime" minOccurs="0"/>
+            <xs:element name="createdBy" type="tns:GUID" minOccurs="0"/>
+            <xs:element name="updatedAt" type="xs:dateTime" minOccurs="0"/>
+            <xs:element name="updatedBy" type="tns:GUID" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="listTitle">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="200"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!--    ||||||||||||||||||||||||||||||||||||||||LIST RECORD|||||||||||||||||||||||||||||||||||||||| -->
+
+    <xs:element name="getListRecordRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="tns:uniqueNameQualifier"/>
+                <xs:element name="id" type="tns:GUID"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="singleListRecordResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="listRecord" type="tns:listRecordSoap"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getAllListRecordsRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="tns:uniqueNameQualifier"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getAllListRecordsResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="listRecord" type="tns:listRecordSoap" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="createListRecordRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="tns:uniqueNameQualifier"/>
+                <xs:element name="listRecord" type="tns:listRecordSoap"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="updateListRecordRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="tns:uniqueNameQualifier"/>
+                <xs:element name="id" type="tns:GUID"/>
+                <xs:element name="listRecord" type="tns:listRecordSoap"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="updateListRecordReactionRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="tns:uniqueNameQualifier"/>
+                <xs:element name="id" type="tns:GUID"/>
+                <xs:element name="listRecordReaction" type="tns:listRecordReactionSoap"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="deleteListRecordRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="tns:uniqueNameQualifier"/>
+                <xs:element name="id" type="tns:GUID"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="listRecordSoap">
+        <xs:sequence>
+            <xs:element name="body" type="tns:listRecordBody"/>
+            <xs:element name="listId" type="tns:GUID" minOccurs="0"/>
+            <xs:element name="rating" type="xs:integer" minOccurs="0"/>
+            <xs:element name="ratingByUsers" type="tns:ratingByUser" minOccurs="0" maxOccurs="unbounded"/>
+
+            <xs:element name="id" type="tns:GUID" minOccurs="0"/>
+            <xs:element name="createdAt" type="xs:dateTime" minOccurs="0"/>
+            <xs:element name="createdBy" type="tns:GUID" minOccurs="0"/>
+            <xs:element name="updatedAt" type="xs:dateTime" minOccurs="0"/>
+            <xs:element name="updatedBy" type="tns:GUID" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ratingByUser">
+        <xs:sequence>
+            <xs:element name="userId" type="tns:GUID" minOccurs="0"/>
+            <xs:element name="rating" type="xs:integer" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="listRecordReactionSoap">
+        <xs:sequence>
+            <xs:element name="value" type="tns:reactionValue"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="reactionValue">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="-1"/>
+            <xs:maxInclusive value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="listRecordBody">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!--    ||||||||||||||||||||||||||||||||||||||||USER|||||||||||||||||||||||||||||||||||||||| -->
+
+
+    <xs:element name="getUserRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="tns:GUID"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="singleUserResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="user" type="tns:userSoap"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getCurrentUserRequest"/>
+
+    <xs:element name="getAllUsersRequest"/>
+
+    <xs:element name="getAllUsersResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="users" type="tns:userSoap" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="userSoap">
+        <xs:sequence>
+            <xs:element name="id" type="tns:GUID"/>
+            <xs:element name="username" type="tns:uniqueNameQualifier"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="GUID">
+        <xs:restriction base="xs:string">
+            <xs:pattern
+                    value="([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})|(\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\})"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="uniqueNameQualifier">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="200"/>
+            <xs:pattern value="[a-zA-Z0-9_]+"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

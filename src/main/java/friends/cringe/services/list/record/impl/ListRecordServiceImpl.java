@@ -2,12 +2,12 @@ package friends.cringe.services.list.record.impl;
 
 import friends.cringe.common.exception.ExceptionType;
 import friends.cringe.common.exception.ExternalException;
+import friends.cringe.common.security.impl.SecurityServiceImpl;
 import friends.cringe.services.list.formation.api.ListDto;
 import friends.cringe.services.list.formation.api.ListService;
 import friends.cringe.services.list.record.api.ListRecordDto;
 import friends.cringe.services.list.record.api.ListRecordReactionDto;
 import friends.cringe.services.list.record.api.ListRecordService;
-import friends.cringe.services.user.api.UserDto;
 import lombok.Setter;
 import org.jooq.DSLContext;
 import org.jooq.JSON;
@@ -35,6 +35,9 @@ public class ListRecordServiceImpl implements ListRecordService {
 
   @Setter(onMethod_ = @Autowired)
   private ListService listService;
+
+  @Setter(onMethod_ = @Autowired)
+  private SecurityServiceImpl securityService;
 
   @Override
   public ListRecordDto get(String listName, UUID id) {
@@ -67,7 +70,7 @@ public class ListRecordServiceImpl implements ListRecordService {
 
   @Transactional
   @Override
-  public ListRecordDto create(String listName, ListRecordDto dto, UserDto userDto) {
+  public ListRecordDto create(String listName, ListRecordDto dto) {
     ListDto listDto = listService.get(listName);
 
     ListRecordRecord listRecordRecord = dsl.newRecord(LIST_RECORD);
@@ -75,8 +78,8 @@ public class ListRecordServiceImpl implements ListRecordService {
     listRecordRecord.setId(UUID.randomUUID());
     listRecordRecord.setBody(dto.getBody());
     listRecordRecord.setListId(listDto.getId());
-    listRecordRecord.setCreatedBy(userDto.getId());
-    listRecordRecord.setUpdatedBy(userDto.getId());
+    listRecordRecord.setCreatedBy(securityService.getCurrentUserId());
+    listRecordRecord.setUpdatedBy(securityService.getCurrentUserId());
 
     listRecordRecord.insert();
 
@@ -85,7 +88,7 @@ public class ListRecordServiceImpl implements ListRecordService {
 
   @Transactional
   @Override
-  public ListRecordDto update(String listName, UUID id, ListRecordDto dto, UserDto userDto) {
+  public ListRecordDto update(String listName, UUID id, ListRecordDto dto) {
     ListRecordRecord listRecordRecord = dsl.select(LIST_RECORD.fields())
         .from(LIST_RECORD)
         .innerJoin(LIST).onKey()
@@ -101,7 +104,7 @@ public class ListRecordServiceImpl implements ListRecordService {
 
     listRecordRecord.setBody(dto.getBody());
     listRecordRecord.setUpdatedAt(LocalDateTime.now());
-    listRecordRecord.setUpdatedBy(userDto.getId());
+    listRecordRecord.setUpdatedBy(securityService.getCurrentUserId());
 
     listRecordRecord.update();
 
@@ -110,15 +113,15 @@ public class ListRecordServiceImpl implements ListRecordService {
 
   @Transactional
   @Override
-  public ListRecordDto updateRating(String listName, UUID id, ListRecordReactionDto dto, UserDto userDto) {
+  public ListRecordDto updateRating(String listName, UUID id, ListRecordReactionDto dto) {
     ListRecordDto listRecordDto = get(listName, id);
 
     if (!dsl.fetchExists(LIST_RECORD_REACTION,
         LIST_RECORD_REACTION.LIST_RECORD_ID.eq(listRecordDto.getId())
-            .and(LIST_RECORD_REACTION.USER_ID.eq(userDto.getId())))) {
+            .and(LIST_RECORD_REACTION.USER_ID.eq(securityService.getCurrentUserId())))) {
       dsl.insertInto(LIST_RECORD_REACTION)
           .set(LIST_RECORD_REACTION.ID, UUID.randomUUID())
-          .set(LIST_RECORD_REACTION.USER_ID, userDto.getId())
+          .set(LIST_RECORD_REACTION.USER_ID, securityService.getCurrentUserId())
           .set(LIST_RECORD_REACTION.LIST_RECORD_ID, listRecordDto.getId())
           .execute();
     }
@@ -126,7 +129,7 @@ public class ListRecordServiceImpl implements ListRecordService {
     dsl.update(LIST_RECORD_REACTION)
         .set(LIST_RECORD_REACTION.RATING, LIST_RECORD_REACTION.RATING.add(dto.getValue()))
         .where(LIST_RECORD_REACTION.LIST_RECORD_ID.eq(listRecordDto.getId())
-            .and(LIST_RECORD_REACTION.USER_ID.eq(userDto.getId())))
+            .and(LIST_RECORD_REACTION.USER_ID.eq(securityService.getCurrentUserId())))
         .execute();
 
     return get(listName, id);

@@ -3,9 +3,9 @@ package friends.cringe.services.list.formation.impl;
 import friends.cringe.common.config.CacheConfig;
 import friends.cringe.common.exception.ExceptionType;
 import friends.cringe.common.exception.ExternalException;
+import friends.cringe.common.security.impl.SecurityServiceImpl;
 import friends.cringe.services.list.formation.api.ListDto;
 import friends.cringe.services.list.formation.api.ListService;
-import friends.cringe.services.user.api.UserDto;
 import lombok.Setter;
 import org.jooq.DSLContext;
 import org.jooq.codegen.tables.records.ListRecord;
@@ -28,22 +28,15 @@ public class ListServiceImpl implements ListService {
   @Setter(onMethod_ = @Autowired)
   private DSLContext dsl;
 
+  @Setter(onMethod_ = @Autowired)
+  private SecurityServiceImpl securityService;
+
   @Cacheable(CacheConfig.LIST_FORMATION_CACHE)
   @Override
   public ListDto get(String name) {
-    return dsl.selectFrom(LIST).where(LIST.NAME.eq(name).and(LIST.DELETED.isFalse())).fetchOptional()
-        .map(x ->
-            ListDto.builder()
-                .id(x.getId())
-                .createdAt(x.getCreatedAt())
-                .createdBy(x.getCreatedBy())
-                .updatedAt(x.getUpdatedAt())
-                .updatedBy(x.getUpdatedBy())
-                .name(x.getName())
-                .title(x.getTitle())
-                .description(x.getDescription())
-                .build()
-        ).orElseThrow(() ->
+    return dsl.selectFrom(LIST).where(LIST.NAME.eq(name).and(LIST.DELETED.isFalse()))
+        .fetchOptionalInto(ListDto.class)
+        .orElseThrow(() ->
             ExternalException.builder()
                 .type(ExceptionType.LIST_NOT_FOUND)
                 .arg("name", name)
@@ -56,23 +49,12 @@ public class ListServiceImpl implements ListService {
     return dsl.selectFrom(LIST)
         .where(LIST.DELETED.isFalse())
         .orderBy(LIST.UPDATED_AT.desc())
-        .fetch().map(x ->
-            ListDto.builder()
-                .id(x.getId())
-                .createdAt(x.getCreatedAt())
-                .createdBy(x.getCreatedBy())
-                .updatedAt(x.getUpdatedAt())
-                .updatedBy(x.getUpdatedBy())
-                .title(x.getTitle())
-                .name(x.getName())
-                .description(x.getDescription())
-                .build()
-        );
+        .fetchInto(ListDto.class);
   }
 
   @Transactional
   @Override
-  public ListDto create(ListDto dto, UserDto userDto) {
+  public ListDto create(ListDto dto) {
     if (dsl.fetchExists(LIST, LIST.NAME.eq(dto.getName()).and(LIST.DELETED.isFalse()))) {
       throw ExternalException.builder()
           .type(ExceptionType.LIST_ALREADY_EXISTS)
@@ -91,10 +73,10 @@ public class ListServiceImpl implements ListService {
 
       listRecord.setId(UUID.randomUUID());
       listRecord.setName(dto.getName());
-      listRecord.setCreatedBy(userDto.getId());
+      listRecord.setCreatedBy(securityService.getCurrentUserId());
     }
 
-    initUpdateFields(dto, userDto.getId(), listRecord);
+    initUpdateFields(dto, securityService.getCurrentUserId(), listRecord);
 
     listRecord.store();
 
@@ -104,7 +86,7 @@ public class ListServiceImpl implements ListService {
   @CacheEvict(key = "#name", value = CacheConfig.LIST_FORMATION_CACHE)
   @Transactional
   @Override
-  public ListDto update(String name, ListDto dto, UserDto userDto) {
+  public ListDto update(String name, ListDto dto) {
     if (!dsl.fetchExists(LIST, LIST.NAME.eq(name).and(LIST.DELETED.isFalse()))) {
       throw ExternalException.builder()
           .type(ExceptionType.LIST_NOT_FOUND)
@@ -114,7 +96,9 @@ public class ListServiceImpl implements ListService {
 
     ListRecord listRecord = dsl.fetchSingle(LIST, LIST.NAME.eq(name));
 
-    initUpdateFields(dto, userDto.getId(), listRecord);
+    initUpdateFields(dto, securityService.getCurrentUserId(), listRecord);
+
+    listRecord.update();
 
     listRecord.update();
 

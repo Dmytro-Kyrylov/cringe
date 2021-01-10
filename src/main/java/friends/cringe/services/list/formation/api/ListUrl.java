@@ -8,7 +8,7 @@ public interface ListUrl {
 
   String NAME = "/{name}";
 
-  String BASE = BaseUrl.BASE_API + RESOURCE_NAME;
+  String BASE = BaseUrl.BASE_REST_API + RESOURCE_NAME;
 
   String GET = BASE + NAME;
 
