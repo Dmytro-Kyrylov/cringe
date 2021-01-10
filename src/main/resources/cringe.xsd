@@ -226,7 +226,7 @@
     <xs:complexType name="userSoap">
         <xs:sequence>
             <xs:element name="id" type="tns:GUID"/>
-            <xs:element name="username" type="tns:listQualifier"/>
+            <xs:element name="username" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 
