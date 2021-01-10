@@ -3,9 +3,8 @@ package friends.cringe.services.user.impl;
 import friends.cringe.common.config.WebServiceConfig;
 import friends.cringe.services.user.api.UserService;
 import friends.cringe.soap.GetAllUsersResponse;
-import friends.cringe.soap.GetCurrentUserResponse;
 import friends.cringe.soap.GetUserRequest;
-import friends.cringe.soap.GetUserResponse;
+import friends.cringe.soap.SingleUserResponse;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
@@ -27,8 +26,8 @@ public class UserSoapEndpoint {
 
   @PayloadRoot(namespace = WebServiceConfig.NAMESPACE, localPart = "getCurrentUserRequest")
   @ResponsePayload
-  public GetCurrentUserResponse get() {
-    GetCurrentUserResponse response = new GetCurrentUserResponse();
+  public SingleUserResponse get() {
+    SingleUserResponse response = new SingleUserResponse();
     response.setUser(userMapper.toSoap(userService.getCurrent()));
 
     return response;
@@ -36,8 +35,8 @@ public class UserSoapEndpoint {
 
   @PayloadRoot(namespace = WebServiceConfig.NAMESPACE, localPart = "getUserRequest")
   @ResponsePayload
-  public GetUserResponse getById(@RequestPayload GetUserRequest request) {
-    GetUserResponse response = new GetUserResponse();
+  public SingleUserResponse getById(@RequestPayload GetUserRequest request) {
+    SingleUserResponse response = new SingleUserResponse();
     response.setUser(userMapper.toSoap(userService.get(UUID.fromString(request.getId()))));
 
     return response;

@@ -25,11 +25,9 @@ public class ListSoapEndpoint {
 
   @PayloadRoot(namespace = WebServiceConfig.NAMESPACE, localPart = "getListRequest")
   @ResponsePayload
-  public GetListResponse getList(@RequestPayload GetListRequest request) {
-    ListDto listDto = listService.get(request.getName());
-
-    GetListResponse response = new GetListResponse();
-    response.setList(listMapper.toSoap(listDto));
+  public SingleListResponse getList(@RequestPayload GetListRequest request) {
+    SingleListResponse response = new SingleListResponse();
+    response.setList(listMapper.toSoap(listService.get(request.getName())));
 
     return response;
   }
@@ -47,9 +45,8 @@ public class ListSoapEndpoint {
 
   @PayloadRoot(namespace = WebServiceConfig.NAMESPACE, localPart = "createListRequest")
   @ResponsePayload
-  public CreateListResponse createList(@RequestPayload CreateListRequest request) {
-
-    CreateListResponse response = new CreateListResponse();
+  public SingleListResponse createList(@RequestPayload CreateListRequest request) {
+    SingleListResponse response = new SingleListResponse();
     response.setList(listMapper.toSoap(listService.create(listMapper.toDto(request.getList()))));
 
     return response;
@@ -57,9 +54,8 @@ public class ListSoapEndpoint {
 
   @PayloadRoot(namespace = WebServiceConfig.NAMESPACE, localPart = "updateListRequest")
   @ResponsePayload
-  public UpdateListResponse updateList(@RequestPayload UpdateListRequest request) {
-
-    UpdateListResponse response = new UpdateListResponse();
+  public SingleListResponse updateList(@RequestPayload UpdateListRequest request) {
+    SingleListResponse response = new SingleListResponse();
     response.setList(listMapper.toSoap(listService.update(request.getName(), listMapper.toDto(request.getList()))));
 
     return response;

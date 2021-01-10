@@ -46,14 +46,14 @@ public class ListRecordController {
 
   @Operation(summary = "Update user reaction for list record", description = "Change rating")
   @PatchMapping(ListRecordUrl.UPDATE_REACTION)
-  public ListRecordDto update(@PathVariable String name, @PathVariable UUID id,
+  public ListRecordDto updateReaction(@PathVariable String name, @PathVariable UUID id,
                               @Valid @RequestBody ListRecordReactionDto dto) {
     return listRecordService.updateRating(name, id, dto);
   }
 
   @Operation(summary = "Delete list record by id and list name")
   @DeleteMapping(ListRecordUrl.DELETE)
-  public void update(@PathVariable String name, @PathVariable UUID id) {
+  public void delete(@PathVariable String name, @PathVariable UUID id) {
     listRecordService.delete(name, id);
   }
 

@@ -31,5 +31,4 @@ public interface ListMapper {
     return uuid == null ? null : UUID.fromString(uuid);
   }
 
-
 }

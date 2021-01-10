@@ -27,7 +27,6 @@ public class ListDto extends AuditableDto {
   @NotNull
   private String title;
 
-  @Length(max = 4000)
   private String description;
 
 }
