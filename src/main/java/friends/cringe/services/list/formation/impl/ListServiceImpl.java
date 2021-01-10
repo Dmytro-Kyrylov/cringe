@@ -116,6 +116,8 @@ public class ListServiceImpl implements ListService {
 
     initUpdateFields(dto, userDto.getId(), listRecord);
 
+    listRecord.update();
+
     return get(name);
   }
 
