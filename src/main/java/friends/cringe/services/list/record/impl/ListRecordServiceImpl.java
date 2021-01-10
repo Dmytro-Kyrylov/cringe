@@ -40,64 +40,64 @@ public class ListRecordServiceImpl implements ListRecordService {
   private SecurityServiceImpl securityService;
 
   @Override
-  public ListRecordDto get(String listName, UUID id) {
+  public ListRecordDto get(Long listQualifier, UUID id) {
     return dsl.select(getListRecordDtoSelectStatement())
         .from(LIST_RECORD)
         .leftJoin(LIST_RECORD_REACTION).onKey()
-        .innerJoin(LIST).onKey()
-        .where(LIST_RECORD.DELETED.isFalse().and(LIST.NAME.eq(listName).and(LIST_RECORD.ID.eq(id))))
+        .innerJoin(LIST).on(LIST.QUALIFIER.eq(LIST_RECORD.LIST_QUALIFIER))
+        .where(LIST_RECORD.DELETED.isFalse().and(LIST.QUALIFIER.eq(listQualifier).and(LIST_RECORD.ID.eq(id))))
         .groupBy(LIST_RECORD.ID)
         .fetchOptionalInto(ListRecordDto.class)
         .orElseThrow(() ->
             ExternalException.builder()
                 .type(ExceptionType.LIST_RECORD_NOT_FOUND)
-                .arg("list", listName)
+                .arg("listQualifier", listQualifier.toString())
                 .arg("id", id.toString())
                 .build()
         );
   }
 
   @Override
-  public List<ListRecordDto> getAll(String listName) {
+  public List<ListRecordDto> getAll(Long listQualifier) {
     return dsl.select(getListRecordDtoSelectStatement())
         .from(LIST_RECORD)
         .leftJoin(LIST_RECORD_REACTION).onKey()
-        .innerJoin(LIST).onKey()
-        .where(LIST_RECORD.DELETED.isFalse().and(LIST.NAME.eq(listName)))
+        .innerJoin(LIST).on(LIST.QUALIFIER.eq(LIST_RECORD.LIST_QUALIFIER))
+        .where(LIST_RECORD.DELETED.isFalse().and(LIST.QUALIFIER.eq(listQualifier)))
         .groupBy(LIST_RECORD.ID)
         .fetchInto(ListRecordDto.class);
   }
 
   @Transactional
   @Override
-  public ListRecordDto create(String listName, ListRecordDto dto) {
-    ListDto listDto = listService.get(listName);
+  public ListRecordDto create(Long listQualifier, ListRecordDto dto) {
+    ListDto listDto = listService.get(listQualifier);
 
     ListRecordRecord listRecordRecord = dsl.newRecord(LIST_RECORD);
 
     listRecordRecord.setId(UUID.randomUUID());
     listRecordRecord.setBody(dto.getBody());
-    listRecordRecord.setListId(listDto.getId());
+    listRecordRecord.setListQualifier(listDto.getQualifier());
     listRecordRecord.setCreatedBy(securityService.getCurrentUserId());
     listRecordRecord.setUpdatedBy(securityService.getCurrentUserId());
 
     listRecordRecord.insert();
 
-    return get(listName, listRecordRecord.getId());
+    return get(listQualifier, listRecordRecord.getId());
   }
 
   @Transactional
   @Override
-  public ListRecordDto update(String listName, UUID id, ListRecordDto dto) {
+  public ListRecordDto update(Long listQualifier, UUID id, ListRecordDto dto) {
     ListRecordRecord listRecordRecord = dsl.select(LIST_RECORD.fields())
         .from(LIST_RECORD)
-        .innerJoin(LIST).onKey()
-        .where(LIST_RECORD.DELETED.isFalse().and(LIST.NAME.eq(listName)).and(LIST_RECORD.ID.eq(id)))
+        .innerJoin(LIST).on(LIST.QUALIFIER.eq(LIST_RECORD.LIST_QUALIFIER))
+        .where(LIST_RECORD.DELETED.isFalse().and(LIST.QUALIFIER.eq(listQualifier)).and(LIST_RECORD.ID.eq(id)))
         .fetchOptionalInto(LIST_RECORD)
         .orElseThrow(() ->
             ExternalException.builder()
                 .type(ExceptionType.LIST_RECORD_NOT_FOUND)
-                .arg("list", listName)
+                .arg("listQualifier", listQualifier.toString())
                 .arg("id", id.toString())
                 .build()
         );
@@ -108,19 +108,18 @@ public class ListRecordServiceImpl implements ListRecordService {
 
     listRecordRecord.update();
 
-    return get(listName, id);
+    return get(listQualifier, id);
   }
 
   @Transactional
   @Override
-  public ListRecordDto updateRating(String listName, UUID id, ListRecordReactionDto dto) {
-    ListRecordDto listRecordDto = get(listName, id);
+  public ListRecordDto updateRating(Long listQualifier, UUID id, ListRecordReactionDto dto) {
+    ListRecordDto listRecordDto = get(listQualifier, id);
 
     if (!dsl.fetchExists(LIST_RECORD_REACTION,
         LIST_RECORD_REACTION.LIST_RECORD_ID.eq(listRecordDto.getId())
             .and(LIST_RECORD_REACTION.USER_ID.eq(securityService.getCurrentUserId())))) {
       dsl.insertInto(LIST_RECORD_REACTION)
-          .set(LIST_RECORD_REACTION.ID, UUID.randomUUID())
           .set(LIST_RECORD_REACTION.USER_ID, securityService.getCurrentUserId())
           .set(LIST_RECORD_REACTION.LIST_RECORD_ID, listRecordDto.getId())
           .execute();
@@ -132,16 +131,16 @@ public class ListRecordServiceImpl implements ListRecordService {
             .and(LIST_RECORD_REACTION.USER_ID.eq(securityService.getCurrentUserId())))
         .execute();
 
-    return get(listName, id);
+    return get(listQualifier, id);
   }
 
   @Transactional
   @Override
-  public void delete(String listName, UUID id) {
-    ListDto listDto = listService.get(listName);
+  public void delete(Long listQualifier, UUID id) {
+    ListDto listDto = listService.get(listQualifier);
     dsl.update(LIST_RECORD)
         .set(LIST_RECORD.DELETED, true)
-        .where(LIST_RECORD.ID.eq(id).and(LIST_RECORD.LIST_ID.eq(listDto.getId())))
+        .where(LIST_RECORD.ID.eq(id).and(LIST_RECORD.LIST_QUALIFIER.eq(listDto.getQualifier())))
         .execute();
   }
 
@@ -152,12 +151,12 @@ public class ListRecordServiceImpl implements ListRecordService {
         jsonEntry("createdBy", LIST_RECORD.CREATED_BY),
         jsonEntry("updatedAt", LIST_RECORD.UPDATED_AT),
         jsonEntry("updatedBy", LIST_RECORD.UPDATED_BY),
-        jsonEntry("listId", LIST_RECORD.LIST_ID),
+        jsonEntry("listQualifier", LIST_RECORD.LIST_QUALIFIER),
         jsonEntry("body", LIST_RECORD.BODY),
         jsonEntry("rating", DSL.coalesce(sum(LIST_RECORD_REACTION.RATING), 0)),
         jsonEntry("ratingByUsers",
             case_()
-                .when(count(LIST_RECORD_REACTION.ID).greaterThan(0),
+                .when(count(LIST_RECORD_REACTION.USER_ID).greaterThan(0),
                     jsonArrayAgg(
                         jsonObject(
                             jsonEntry("rating", LIST_RECORD_REACTION.RATING),

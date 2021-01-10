@@ -17,13 +17,11 @@ public interface ListRecordMapper {
   ListRecordReactionDto toDto(ListRecordReactionSoap listRecordReactionSoap);
 
   @Mapping(target = "id", source = "id", qualifiedByName = "uuidToString")
-  @Mapping(target = "listId", source = "listId", qualifiedByName = "uuidToString")
   @Mapping(target = "createdBy", source = "createdBy", qualifiedByName = "uuidToString")
   @Mapping(target = "updatedBy", source = "updatedBy", qualifiedByName = "uuidToString")
   ListRecordSoap toSoap(ListRecordDto listRecordDto);
 
   @Mapping(target = "id", source = "id", qualifiedByName = "stringToUUID")
-  @Mapping(target = "listId", source = "listId", qualifiedByName = "stringToUUID")
   @Mapping(target = "createdBy", source = "createdBy", qualifiedByName = "stringToUUID")
   @Mapping(target = "updatedBy", source = "updatedBy", qualifiedByName = "stringToUUID")
   ListRecordDto toDto(ListRecordSoap listRecordSoap);

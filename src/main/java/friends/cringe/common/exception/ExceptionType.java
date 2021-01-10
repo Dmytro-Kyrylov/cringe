@@ -12,7 +12,6 @@ public enum ExceptionType {
   BAD_REQUEST("Bad request", HttpStatus.BAD_REQUEST),
 
   LIST_NOT_FOUND("List not found", HttpStatus.NOT_FOUND),
-  LIST_ALREADY_EXISTS("List with this name already exists", HttpStatus.CONFLICT),
 
   LIST_RECORD_NOT_FOUND("List record not found", HttpStatus.NOT_FOUND),
 

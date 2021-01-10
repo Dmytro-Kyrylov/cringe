@@ -28,7 +28,7 @@ public class ListRecordSoapEndpoint {
     SingleListRecordResponse response = new SingleListRecordResponse();
     response.setListRecord(
         listRecordMapper.toSoap(
-            listRecordService.get(request.getName(), UUID.fromString(request.getId()))
+            listRecordService.get(request.getQualifier().longValue(), UUID.fromString(request.getId()))
         )
     );
 
@@ -40,7 +40,7 @@ public class ListRecordSoapEndpoint {
   public GetAllListRecordsResponse getAll(@RequestPayload GetAllListRecordsRequest request) {
     GetAllListRecordsResponse response = new GetAllListRecordsResponse();
     response.getListRecord().addAll(
-        listRecordService.getAll(request.getName())
+        listRecordService.getAll(request.getQualifier().longValue())
             .stream()
             .map(listRecordMapper::toSoap)
             .collect(Collectors.toSet())
@@ -55,7 +55,7 @@ public class ListRecordSoapEndpoint {
     SingleListRecordResponse response = new SingleListRecordResponse();
     response.setListRecord(
         listRecordMapper.toSoap(
-            listRecordService.create(request.getName(), listRecordMapper.toDto(request.getListRecord()))
+            listRecordService.create(request.getQualifier().longValue(), listRecordMapper.toDto(request.getListRecord()))
         )
     );
 
@@ -68,7 +68,7 @@ public class ListRecordSoapEndpoint {
     SingleListRecordResponse response = new SingleListRecordResponse();
     response.setListRecord(
         listRecordMapper.toSoap(
-            listRecordService.update(request.getName(), UUID.fromString(request.getId()),
+            listRecordService.update(request.getQualifier().longValue(), UUID.fromString(request.getId()),
                 listRecordMapper.toDto(request.getListRecord()))
         )
     );
@@ -82,7 +82,7 @@ public class ListRecordSoapEndpoint {
     SingleListRecordResponse response = new SingleListRecordResponse();
     response.setListRecord(
         listRecordMapper.toSoap(
-            listRecordService.updateRating(request.getName(), UUID.fromString(request.getId()),
+            listRecordService.updateRating(request.getQualifier().longValue(), UUID.fromString(request.getId()),
                 listRecordMapper.toDto(request.getListRecordReaction()))
         )
     );
@@ -93,7 +93,7 @@ public class ListRecordSoapEndpoint {
   @PayloadRoot(namespace = WebServiceConfig.NAMESPACE, localPart = "deleteListRecordRequest")
   @ResponsePayload
   public void delete(@RequestPayload DeleteListRecordRequest request) {
-    listRecordService.delete(request.getName(), UUID.fromString(request.getId()));
+    listRecordService.delete(request.getQualifier().longValue(), UUID.fromString(request.getId()));
   }
 
 }

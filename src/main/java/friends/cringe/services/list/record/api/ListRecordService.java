@@ -5,16 +5,16 @@ import java.util.UUID;
 
 public interface ListRecordService {
 
-  ListRecordDto get(String listName, UUID id);
+  ListRecordDto get(Long listQualifier, UUID id);
 
-  List<ListRecordDto> getAll(String listName);
+  List<ListRecordDto> getAll(Long listQualifier);
 
-  ListRecordDto create(String listName, ListRecordDto dto);
+  ListRecordDto create(Long listQualifier, ListRecordDto dto);
 
-  ListRecordDto update(String listName, UUID id, ListRecordDto dto);
+  ListRecordDto update(Long listQualifier, UUID id, ListRecordDto dto);
 
-  ListRecordDto updateRating(String listName, UUID id, ListRecordReactionDto dto);
+  ListRecordDto updateRating(Long listQualifier, UUID id, ListRecordReactionDto dto);
 
-  void delete(String listName, UUID id);
+  void delete(Long listQualifier, UUID id);
 
 }

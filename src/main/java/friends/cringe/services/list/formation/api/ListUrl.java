@@ -6,7 +6,7 @@ public interface ListUrl {
 
   String RESOURCE_NAME = "/list";
 
-  String NAME = "/{name}";
+  String NAME = "/{qualifier}";
 
   String BASE = BaseUrl.BASE_REST_API + RESOURCE_NAME;
 

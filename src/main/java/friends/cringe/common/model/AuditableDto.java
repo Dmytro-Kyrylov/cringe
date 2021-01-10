@@ -15,9 +15,6 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
-@SuperBuilder
-@NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class AuditableDto extends UUIDDto {
 

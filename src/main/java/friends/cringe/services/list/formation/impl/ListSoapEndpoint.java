@@ -27,7 +27,7 @@ public class ListSoapEndpoint {
   @ResponsePayload
   public SingleListResponse getList(@RequestPayload GetListRequest request) {
     SingleListResponse response = new SingleListResponse();
-    response.setList(listMapper.toSoap(listService.get(request.getName())));
+    response.setList(listMapper.toSoap(listService.get(request.getQualifier().longValue())));
 
     return response;
   }
@@ -56,7 +56,7 @@ public class ListSoapEndpoint {
   @ResponsePayload
   public SingleListResponse updateList(@RequestPayload UpdateListRequest request) {
     SingleListResponse response = new SingleListResponse();
-    response.setList(listMapper.toSoap(listService.update(request.getName(), listMapper.toDto(request.getList()))));
+    response.setList(listMapper.toSoap(listService.update(request.getQualifier().longValue(), listMapper.toDto(request.getList()))));
 
     return response;
   }
@@ -64,7 +64,7 @@ public class ListSoapEndpoint {
   @PayloadRoot(namespace = WebServiceConfig.NAMESPACE, localPart = "deleteListRequest")
   @ResponsePayload
   public void deleteList(@RequestPayload DeleteListRequest request) {
-    listService.delete(request.getName());
+    listService.delete(request.getQualifier().longValue());
   }
 
 }

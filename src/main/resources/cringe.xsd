@@ -9,7 +9,7 @@
     <xs:element name="getListRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="name" type="tns:uniqueNameQualifier"/>
+                <xs:element name="qualifier" type="tns:listQualifier"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -43,7 +43,7 @@
     <xs:element name="updateListRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="name" type="tns:uniqueNameQualifier"/>
+                <xs:element name="qualifier" type="tns:listQualifier"/>
                 <xs:element name="list" type="tns:listSoap"/>
             </xs:sequence>
         </xs:complexType>
@@ -52,14 +52,14 @@
     <xs:element name="deleteListRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="name" type="tns:uniqueNameQualifier"/>
+                <xs:element name="qualifier" type="tns:listQualifier"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
 
     <xs:complexType name="listSoap">
         <xs:sequence>
-            <xs:element name="name" type="tns:uniqueNameQualifier"/>
+            <xs:element name="qualifier" type="tns:listQualifier"/>
             <xs:element name="description" type="xs:string" minOccurs="0"/>
             <xs:element name="title" type="tns:listTitle"/>
 
@@ -83,7 +83,7 @@
     <xs:element name="getListRecordRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="name" type="tns:uniqueNameQualifier"/>
+                <xs:element name="qualifier" type="tns:listQualifier"/>
                 <xs:element name="id" type="tns:GUID"/>
             </xs:sequence>
         </xs:complexType>
@@ -100,7 +100,7 @@
     <xs:element name="getAllListRecordsRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="name" type="tns:uniqueNameQualifier"/>
+                <xs:element name="qualifier" type="tns:listQualifier"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -116,7 +116,7 @@
     <xs:element name="createListRecordRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="name" type="tns:uniqueNameQualifier"/>
+                <xs:element name="qualifier" type="tns:listQualifier"/>
                 <xs:element name="listRecord" type="tns:listRecordSoap"/>
             </xs:sequence>
         </xs:complexType>
@@ -125,7 +125,7 @@
     <xs:element name="updateListRecordRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="name" type="tns:uniqueNameQualifier"/>
+                <xs:element name="qualifier" type="tns:listQualifier"/>
                 <xs:element name="id" type="tns:GUID"/>
                 <xs:element name="listRecord" type="tns:listRecordSoap"/>
             </xs:sequence>
@@ -135,7 +135,7 @@
     <xs:element name="updateListRecordReactionRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="name" type="tns:uniqueNameQualifier"/>
+                <xs:element name="qualifier" type="tns:listQualifier"/>
                 <xs:element name="id" type="tns:GUID"/>
                 <xs:element name="listRecordReaction" type="tns:listRecordReactionSoap"/>
             </xs:sequence>
@@ -145,7 +145,7 @@
     <xs:element name="deleteListRecordRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="name" type="tns:uniqueNameQualifier"/>
+                <xs:element name="qualifier" type="tns:listQualifier"/>
                 <xs:element name="id" type="tns:GUID"/>
             </xs:sequence>
         </xs:complexType>
@@ -154,7 +154,7 @@
     <xs:complexType name="listRecordSoap">
         <xs:sequence>
             <xs:element name="body" type="tns:listRecordBody"/>
-            <xs:element name="listId" type="tns:GUID" minOccurs="0"/>
+            <xs:element name="listQualifier" type="tns:listQualifier" minOccurs="0"/>
             <xs:element name="rating" type="xs:integer" minOccurs="0"/>
             <xs:element name="ratingByUsers" type="tns:ratingByUser" minOccurs="0" maxOccurs="unbounded"/>
 
@@ -226,7 +226,7 @@
     <xs:complexType name="userSoap">
         <xs:sequence>
             <xs:element name="id" type="tns:GUID"/>
-            <xs:element name="username" type="tns:uniqueNameQualifier"/>
+            <xs:element name="username" type="tns:listQualifier"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -237,11 +237,9 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name="uniqueNameQualifier">
-        <xs:restriction base="xs:string">
-            <xs:minLength value="1"/>
-            <xs:maxLength value="200"/>
-            <xs:pattern value="[a-zA-Z0-9_]+"/>
+    <xs:simpleType name="listQualifier">
+        <xs:restriction base="xs:unsignedLong">
+            <xs:minInclusive value="1"/>
         </xs:restriction>
     </xs:simpleType>
 
