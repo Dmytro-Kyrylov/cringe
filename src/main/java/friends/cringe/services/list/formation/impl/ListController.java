@@ -17,7 +17,7 @@ public class ListController {
   @Setter(onMethod_ = @Autowired)
   private ListService listService;
 
-  @Operation(summary = "Get list by name")
+  @Operation(summary = "Get list by qualifier")
   @GetMapping(ListUrl.GET)
   public ListDto get(@PathVariable Long qualifier) {
     return listService.get(qualifier);
