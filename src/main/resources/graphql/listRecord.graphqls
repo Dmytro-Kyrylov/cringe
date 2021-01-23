@@ -1,0 +1,31 @@
+extend type Query {
+    getAllListRecords(listQualifier: String!): [ListRecordQL],
+    getListRecord(listQualifier: String!, id: ID!): ListRecordQL
+}
+
+extend type Mutation {
+    createListRecord(listQualifier: String!, body: String!):ListRecordQL,
+    updateListRecord(listQualifier: String!, id: ID!, body: String!):ListRecordQL,
+    updateRatingForListRecord(listQualifier: String!, id: ID!, value: String!):ListRecordQL,
+    deleteListRecord(listQualifier: String!, id: ID!):Boolean
+}
+
+type ListRecordQL {
+    id: ID!,
+    createdAt: String!,
+    createdBy: String!,
+    createdByUser: UserQL!,
+    updatedAt: String!,
+    updatedBy: String!,
+    updatedByUser: UserQL!,
+    body: String!
+    listQualifier: String!,
+    rating: String!,
+    ratingByUsers: [RatingByUserQL]
+}
+
+type RatingByUserQL {
+    userId: String!,
+    user: UserQL!,
+    rating: String!
+}

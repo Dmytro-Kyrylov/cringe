@@ -1,0 +1,10 @@
+extend type Query {
+    getUserById(id: String!): UserQL,
+    getCurrentUser: UserQL!,
+    getAllUsers: [UserQL!]
+}
+
+type UserQL {
+    id: ID!,
+    username: String!
+}

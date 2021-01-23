@@ -30,9 +30,7 @@ public class ListWebSockController {
     List<UserDto> allUsers = userService.getAll();
     allUsers.removeIf(x -> x.getId().equals(message.getSenderId()));
 
-    for (UserDto user : allUsers) {
-      messagingTemplate.convertAndSendToUser(user.getId().toString(), "/queue/messages", message);
-    }
+    messagingTemplate.convertAndSendToUser("/vadya", "/queue/messages", message);
   }
 
   @Data

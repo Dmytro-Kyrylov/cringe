@@ -31,11 +31,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     http
         .csrf().disable()
         .cors().and()
-        .authorizeRequests()
-        .antMatchers("/actuator/**").permitAll()
-        .antMatchers(HttpMethod.OPTIONS).permitAll()
-        .anyRequest().authenticated()
-        .and().httpBasic();
+        .authorizeRequests().anyRequest().permitAll();
+        //.antMatchers("/actuator/**").permitAll()
+        //.antMatchers(HttpMethod.OPTIONS).permitAll()
+        //.anyRequest().authenticated()
+       // .and().httpBasic();
   }
 
   @Override

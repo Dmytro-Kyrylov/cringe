@@ -1,0 +1,29 @@
+extend type Query {
+    getAllLists: [ListQL],
+    getList(qualifier: String!): ListQL
+}
+
+extend type Mutation {
+    createList(list: ListInputQL!): ListQL,
+    updateList(qualifier: String!, list: ListInputQL!): ListQL,
+    deleteList(qualifier: String!): Boolean
+}
+
+input ListInputQL{
+    title: String!,
+    description: String!
+}
+
+type ListQL{
+    id: ID!,
+    createdAt: String!,
+    createdBy: String!,
+    createdByUser: UserQL!,
+    updatedAt: String!,
+    updatedBy: String!,
+    updatedByUser: UserQL!,
+    qualifier: String!,
+    title: String!,
+    description: String!,
+    records: [ListRecordQL]
+}

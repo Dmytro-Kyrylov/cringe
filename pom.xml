@@ -113,6 +113,47 @@
             <artifactId>cache-api</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.graphql-java-kickstart/graphql-spring-boot-starter -->
+        <dependency>
+            <groupId>com.graphql-java-kickstart</groupId>
+            <artifactId>graphql-spring-boot-starter</artifactId>
+            <version>8.1.1</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.graphql-java-kickstart/playground-spring-boot-starter -->
+        <dependency>
+            <groupId>com.graphql-java-kickstart</groupId>
+            <artifactId>playground-spring-boot-starter</artifactId>
+            <version>8.1.1</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.graphql-java-kickstart/voyager-spring-boot-starter -->
+        <dependency>
+            <groupId>com.graphql-java-kickstart</groupId>
+            <artifactId>voyager-spring-boot-starter</artifactId>
+            <version>8.1.1</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.graphql-java-kickstart/graphql-java-tools -->
+        <dependency>
+            <groupId>com.graphql-java-kickstart</groupId>
+            <artifactId>graphql-java-tools</artifactId>
+            <version>6.3.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.graphql-java/graphql-java-extended-scalars -->
+        <dependency>
+            <groupId>com.graphql-java</groupId>
+            <artifactId>graphql-java-extended-scalars</artifactId>
+            <version>2019-08-31T02-34-04-3decba9</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.graphql-java-kickstart</groupId>
+                    <artifactId>graphql-java-tools</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter -->
         <dependency>
             <groupId>io.springfox</groupId>

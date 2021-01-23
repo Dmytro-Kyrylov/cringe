@@ -2,10 +2,7 @@ package friends.cringe.services.list.record.api;
 
 import friends.cringe.common.model.AuditableDto;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
@@ -15,8 +12,11 @@ import java.util.UUID;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class ListRecordDto extends AuditableDto {
 
+  @NonNull
   @Length(min = 1)
   @NotNull
   private String body;
